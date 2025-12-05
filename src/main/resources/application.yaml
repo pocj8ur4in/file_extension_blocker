@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: file_extension_blocker
+---
+spring:
+  config:
+    activate:
+      on-profile: test
