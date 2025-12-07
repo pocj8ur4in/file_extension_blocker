@@ -7,8 +7,10 @@ import kr.co.pocj8ur4in.blocker.extension.file.controller.dto.AddDefaultExtensio
 import kr.co.pocj8ur4in.blocker.extension.file.entity.CustomFileExtension;
 import kr.co.pocj8ur4in.blocker.extension.file.entity.DefaultFileExtension;
 import kr.co.pocj8ur4in.blocker.extension.file.exception.DuplicateExtensionException;
+import kr.co.pocj8ur4in.blocker.extension.file.exception.EmptyExtensionException;
 import kr.co.pocj8ur4in.blocker.extension.file.exception.ExistDefaultExtensionException;
 import kr.co.pocj8ur4in.blocker.extension.file.exception.ExtensionNotFoundException;
+import kr.co.pocj8ur4in.blocker.extension.file.exception.InvalidExtensionFormatException;
 import kr.co.pocj8ur4in.blocker.extension.file.exception.MaxExtensionLimitException;
 import kr.co.pocj8ur4in.blocker.extension.file.repository.CustomFileExtensionRepository;
 import kr.co.pocj8ur4in.blocker.extension.file.repository.DefaultFileExtensionRepository;
@@ -45,6 +47,14 @@ public class FileExtensionServiceImpl implements FileExtensionService {
     @Override
     public void saveCustomExtension(AddCustomExtensionRequest request) {
         String name = request.getName().trim().toLowerCase();
+
+        if (name.isEmpty()) {
+            throw new EmptyExtensionException();
+        }
+
+        if (!name.matches("^[a-zA-Z0-9]+$")) {
+            throw new InvalidExtensionFormatException(request.getName().trim());
+        }
 
         long currentCount = customFileExtensionRepository.count();
         if (currentCount >= MAX_CUSTOM_EXTENSIONS) {
