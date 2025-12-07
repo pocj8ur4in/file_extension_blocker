@@ -24,6 +24,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error.getMessage());
     }
 
+    @ExceptionHandler(MaxExtensionLimitException.class)
+    public ResponseEntity<String> handleMaxExtensionLimit(MaxExtensionLimitException error) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error.getMessage());
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleRuntimeException(RuntimeException error) {
         return ResponseEntity.internalServerError().body(error.getMessage());
