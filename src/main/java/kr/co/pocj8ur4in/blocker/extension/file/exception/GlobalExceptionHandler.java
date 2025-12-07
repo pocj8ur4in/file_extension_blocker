@@ -29,6 +29,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error.getMessage());
     }
 
+    @ExceptionHandler(EmptyExtensionException.class)
+    public ResponseEntity<String> handleEmptyExtension(EmptyExtensionException error) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error.getMessage());
+    }
+
+    @ExceptionHandler(InvalidExtensionFormatException.class)
+    public ResponseEntity<String> handleInvalidExtensionFormat(
+            InvalidExtensionFormatException error) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error.getMessage());
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleRuntimeException(RuntimeException error) {
         return ResponseEntity.internalServerError().body(error.getMessage());
