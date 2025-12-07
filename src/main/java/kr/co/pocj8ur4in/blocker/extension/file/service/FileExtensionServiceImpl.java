@@ -9,6 +9,7 @@ import kr.co.pocj8ur4in.blocker.extension.file.entity.DefaultFileExtension;
 import kr.co.pocj8ur4in.blocker.extension.file.exception.DuplicateExtensionException;
 import kr.co.pocj8ur4in.blocker.extension.file.exception.ExistDefaultExtensionException;
 import kr.co.pocj8ur4in.blocker.extension.file.exception.ExtensionNotFoundException;
+import kr.co.pocj8ur4in.blocker.extension.file.exception.MaxExtensionLimitException;
 import kr.co.pocj8ur4in.blocker.extension.file.repository.CustomFileExtensionRepository;
 import kr.co.pocj8ur4in.blocker.extension.file.repository.DefaultFileExtensionRepository;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class FileExtensionServiceImpl implements FileExtensionService {
+    private static final int MAX_CUSTOM_EXTENSIONS = 200;
+
     private final CustomFileExtensionRepository customFileExtensionRepository;
     private final DefaultFileExtensionRepository defaultFileExtensionRepository;
 
@@ -42,6 +45,11 @@ public class FileExtensionServiceImpl implements FileExtensionService {
     @Override
     public void saveCustomExtension(AddCustomExtensionRequest request) {
         String name = request.getName().trim().toLowerCase();
+
+        long currentCount = customFileExtensionRepository.count();
+        if (currentCount >= MAX_CUSTOM_EXTENSIONS) {
+            throw new MaxExtensionLimitException(MAX_CUSTOM_EXTENSIONS);
+        }
 
         if (customFileExtensionRepository.existsByNameIgnoreCase(name)) {
             throw new DuplicateExtensionException(name);
