@@ -1,6 +1,11 @@
 spring:
   application:
     name: file_extension_blocker
+  datasource:
+    url: jdbc:postgresql://localhost:55432/file_extension_blocker
+    username: postgres_user
+    password: postgres_password
+    driver-class-name: org.postgresql.Driver
 ---
 spring:
   config:
