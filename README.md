@@ -22,3 +22,38 @@ block or restrict attachment/upload of files based on file extension
 2. When the add button is clicked, it is saved to the database and displayed in the area below.
 3. Custom extensions can be added up to a maximum of 200.
 4. Clicking the X next to an extension deletes it from the database.
+
+## Considerations
+
+- **Duplicate Extension Check**
+  - Prevents adding duplicate custom extensions
+
+- **Fixed Extension Conflict Prevention**
+  - Prevents adding custom extensions that already exist in fixed extensions
+
+- **Case-Insensitive Processing**
+  - All extensions are converted to lowercase before storage
+
+- **Whitespace Removal**
+  - Leading and trailing whitespace are automatically removed using `trim()`
+  - Empty string validation after trimming
+
+- **Extension Format Validation**
+  - Only alphanumeric characters (a-z, A-Z, 0-9) are allowed
+  - Special characters, dots, spaces, and non-ASCII characters are rejected
+  - Validation at both DTO level (`@Pattern`) and service level
+
+- **Transaction Management**
+  - `@Transactional` annotations ensure data consistency
+  - Read-only transactions (`@Transactional(readOnly = true)`) for query operations
+  - Optimized performance with proper transaction boundaries
+
+- **Maximum Count Limit Validation**
+  - Server-side validation to prevent exceeding 200 custom extensions
+  - **Pessimistic Lock Implementation**: Prevent race conditions
+  - Ensures that concurrent requests cannot bypass the 200-item limit
+
+- **UUID-Based Identifiers**
+  - Each extension uses a UUID instead of sequential IDs
+  - Enhances security by preventing ID enumeration attacks
+  - UUIDs are automatically generated on entity creation
