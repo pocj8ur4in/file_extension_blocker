@@ -56,7 +56,7 @@ public class FileExtensionServiceImpl implements FileExtensionService {
             throw new InvalidExtensionFormatException(request.getName().trim());
         }
 
-        long currentCount = customFileExtensionRepository.count();
+        long currentCount = customFileExtensionRepository.countWithLock();
         if (currentCount >= MAX_CUSTOM_EXTENSIONS) {
             throw new MaxExtensionLimitException(MAX_CUSTOM_EXTENSIONS);
         }
